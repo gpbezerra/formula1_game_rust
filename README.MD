@@ -99,17 +99,17 @@ _________________
 Tipos de pneu: Duro, Médio, Macio.
 
 Estrutura piloto:
- - nome: string
- - habilidade: numero de 0 a 100
- - tipo de pneu escolhido: enum tipo de pneu
- - desgate do pneu: numero de 0 a 10
- - fazer ultrapassagem: boolean
+ - nome: string;
+ - habilidade: numero de 0 a 100;
+ - tipo de pneu escolhido: enum tipo de pneu;
+ - desgaste do pneu: numero de 0 a 10;
+ - fazer ultrapassagem: boolean. Esse valor representa se o piloto pode ou não realizar a ultrapassagem, caso tenha sido ultrapassado esse valor será false.
 
-Observação: Os range dos valores de "habilidade" e "desgaste do pneu" podem ser alteradas caso eu descubra uma lógica melhor de funcionar matematicamente
-
+*Observação: Os range dos valores de "habilidade" e "desgaste do pneu" podem ser alteradas caso eu descubra uma lógica melhor de funcionar matematicamente.*
 _________________
 
 ## Algumas coisas que ainda não faço ideia de como realizar
 
-- 
-- 
+- Melhor maneira de se calcular a probabilidade de ultrapassagem;
+- Devo colocar probababilidade de ultrapassagem como atributo de um piloto? ou só deixar como um valor dentro da função;
+- Números desgaste do pneu e habilidade serem de 0 a 10 e de 0 a 100.
