@@ -34,16 +34,19 @@ Existem 3 tipos de pneus: Duro, Médio e Macio. Assim como na formula 1, os pneu
 *Legenda: pneu piloto atual -> pneu piloto acima (piloto a ser ultrapassado). O símbolo " -> " representa a chance do primeiro pneu ultrapassar o segundo.*
 
 #### **Pneu Macio**
-Pneu Macio -> Pneu Médio = 70% de chance de ultrapassagem
-Pneu Macio -> Pneu Duro = 90% de chance de ultrapassagem
+- Pneu Macio -> Pneu Médio = 70% de chance de ultrapassagem
+- Pneu Macio -> Pneu Duro = 90% de chance de ultrapassagem
+- Pneu Macio -> Pneu Macio = 50% de chance de ultrapassagem
 
 #### **Pneu Médio**
-Pneu Médio -> Pneu Macio = 30% de chance de ultrapassagem
-Pneu Médio -> Pneu Duro = 60% de chance de ultrapassagem
+- Pneu Médio -> Pneu Macio = 30% de chance de ultrapassagem
+- Pneu Médio -> Pneu Duro = 60% de chance de ultrapassagem
+- Pneu Médio -> Pneu Médio = 50% de chance de ultrapassagem
 
 #### **Pneu Duro**
-Pneu Duro -> Pneu Macio = 10%  de chance de ultrapassagem
-Pneu Duro -> Pneu Médio = 40% de chance de ultrapassagem
+- Pneu Duro -> Pneu Macio = 10%  de chance de ultrapassagem
+- Pneu Duro -> Pneu Médio = 40% de chance de ultrapassagem
+- Pneu Duro -> Pneu Duro = 50% de chance de ultrapassagem
 
 ###  Cálcular desgaste dos pneus 
 
@@ -75,10 +78,10 @@ _________________
 O piloto assim que faz um pit-stop perde 3 posições na corrida. O piloto irá continuar com o mesmo tipo de pneu por toda a corrida, baseado em como foi definido anteriormente o tipo de pneu no arquivo json, nesse caso iremos deixar pneu fixo apenas por questões de simplificação.
 
 #### **Chance dos pit-stop ocorrer**
-Valor desgaste do pneu == 7 -> 20% de chance de ocorrer um pit-stop
-Valor desgaste do pneu == 8 -> 40% de chance de ocorrer um pit-stop
-Valor desgaste do pneu == 9 -> 70% de chance de ocorrer um pit-stop
-Valor desgaste do pneu == 10 -> 100% de chance de ocorrer um pit-stop
+- Valor desgaste do pneu == 7 -> 20% de chance de ocorrer um pit-stop
+- Valor desgaste do pneu == 8 -> 40% de chance de ocorrer um pit-stop
+- Valor desgaste do pneu == 9 -> 70% de chance de ocorrer um pit-stop
+- Valor desgaste do pneu == 10 -> 100% de chance de ocorrer um pit-stop
 
 ***Pit-stops em safety car ao invés do piloto perder 3 posições como definido a cima, o piloto perde apenas 1 posição***
 _________________
