@@ -11,6 +11,7 @@ use std::fs;
 use std::cmp::{Ordering};
 use serde::{Serialize, Deserialize};
 use rand::seq::SliceRandom;
+use rand::Rng;
 
 #[derive(PartialEq, PartialOrd, Serialize, Deserialize, Debug)]
 enum TireTypes {
@@ -43,9 +44,16 @@ struct Racer {
     overtake: bool, // if true, the driver can overtake the next driver 
 }
 
+#[allow(dead_code)]
 impl Racer {
     fn new(name: &str, skill: u8, tire_type: TireTypes, tire_wear: u8, overtake: bool) -> Self {
         Self { name: name.to_string(), skill, tire_type, tire_wear, overtake}
+    }
+
+    fn overtake(&self, target: &Self) -> bool {
+        let mut rng = rand::thread_rng();
+        let result: u8 = rng.gen();
+        result <= 127 
     }
 }
 
@@ -92,10 +100,17 @@ impl Race {
         };
         ordered_race
     }
+
+    fn next_lap(&mut self) {
+        self.number_of_laps -= 1;
+    }
 }
 
 fn main() {
-    let race = Race::new("default_race.json");
-    println!("{:?}", race);
-    println!("{}", race.positions[0].skill < race.positions[1].skill);
+    let mut race = Race::new("default_race.json");
+    println!("{:?}", race.number_of_laps);
+    println!("{:?}", race.positions[1].overtake(&race.positions[0]));
+    race.next_lap();
+    println!("{:?}", race.number_of_laps);
+    println!("{:?}", race.positions[1].overtake(&race.positions[0]));
 }
