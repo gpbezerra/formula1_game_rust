@@ -3,26 +3,26 @@ Programa para simular uma corrida de formula 1.
 
 ## Corrida
 
-Objetivo: Gerar uma corrida com número x de pilotos e um número y de voltas, ao final a corrida deve retornar a tabela de classificação, dando ênfanse no podium. Os dados relativo aos pilotos serão consumidos através de um arquivo json. As posições de largada dos pilotos na corrida serão ordenadas de maneira aleatória. 
+Objetivo: Gerar uma corrida com número x de pilotos e um número y de voltas; ao final da corrida, o programa deve retornar a tabela de classificação, dando ênfanse ao pódio. Os dados relativos aos pilotos serão consumidos através de um arquivo json. As posições de largada dos pilotos na corrida serão definidas de maneira aleatória. 
 
-Possíveis eventos que podem ocorer durante uma corrida:
-- A cada volta será avaliado se evento: **pit-stop** pode ocorrer;
-- A cada volta os pilotos podem realizar o evento: **ultrapassagem**;
-- A cada volta os pilotos tem 1% de chance de sofrer um acidente, caso o piloto sofra um acidente ele estará fora da corrida, gerando um evento: **safety car**. *Observação: o pilotos que sairem da corrida também estarão na tabela de classificação com o status "out"*.
+Possíveis eventos que podem ocorrer durante uma corrida:
+- A cada volta será avaliado se o evento **pit-stop** pode ocorrer;
+- A cada volta os pilotos podem realizar o evento **ultrapassagem**; uma ultrapassagem também implica em uam chance de ocorrer um acidente envolvendo quem ultrapassa além do possível ultrapassado.  
+- A cada volta os pilotos tem uma chance de 1% de sofrer um acidente; caso o piloto sofra um acidente ele estará fora da corrida, gerando um evento **safety car**. Os pilotos que saírem da corrida também estarão na tabela de classificação com o status "out"*.
 
-A cada volta o valor de "desgaste do pneu" de cada piloto deve ser alterado de acordo com seu tipo.
+A cada volta o valor de **desgaste do pneu** de cada piloto deve ser alterado de acordo com seu tipo.
 
-_________________
+<hr>
 
 ## Ultrapassagem
 
-**Regras**:
+### Regras
 
 1. Cada piloto pode fazer apenas uma ultrapassagem por volta;
 2. Quando uma ultrapassagem é realizada, o piloto no qual foi ultrapassado é impossibilitado de realizar uma ultrapassagem na mesma volta;
 3. As ultrapassagens começam a ocorrer da ultima posição até a primeira, verificando a probabilidade de cada ultrapassagem e acidente durante a ultrapassagem
 
-Para ocorrer uma ultrapassagem são considerados 3 fatores
+Para ocorrer uma ultrapassagem, são considerados 3 fatores:
 - Tipo de pneu
 - Desgaste do pneu
 - Habilidade do piloto
@@ -71,7 +71,7 @@ O valor de PH será aplicado diretamente no valor da porcentagem de ultrapassage
 
 A cada ultrapassagem realizada existe uma probabilidade de 5% de ocorrer um acidente. **Nesse caso o acidente irá retirar os dois pilotos envolvidos na ultrapassgem da corridda**, gerando um evento: **safety car**
 
-_________________
+<hr>
 
 ## Pit-stop
 
@@ -84,7 +84,8 @@ O piloto assim que faz um pit-stop perde 3 posições na corrida. O piloto irá 
 - Valor desgaste do pneu == 10 -> 100% de chance de ocorrer um pit-stop
 
 ***Pit-stops em safety car ao invés do piloto perder 3 posições como definido a cima, o piloto perde apenas 1 posição***
-_________________
+
+<hr>
 
 ## Safety Car
 
@@ -95,7 +96,7 @@ _________________
 - Pit-stops em safety car o piloto perde apenas 1 posição;
 - A contagem de desgaste dos pneus por volta permanece
 
-_________________
+<hr>
 
 ## Dados
 
@@ -109,7 +110,8 @@ Estrutura piloto:
  - fazer ultrapassagem: boolean. Esse valor representa se o piloto pode ou não realizar a ultrapassagem, caso tenha sido ultrapassado esse valor será false.
 
 *Observação: Os range dos valores de "habilidade" e "desgaste do pneu" podem ser alteradas caso eu descubra uma lógica melhor de funcionar matematicamente.*
-_________________
+
+<hr>
 
 ## Algumas coisas que ainda não faço ideia de como realizar
 

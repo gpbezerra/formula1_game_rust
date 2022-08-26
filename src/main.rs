@@ -7,94 +7,93 @@
 // 7 - Implementar struct com encapsulamento 
 // 8 - Possível enum
 
+use std::fs;
+use std::cmp::{Ordering};
+use serde::{Serialize, Deserialize};
+use rand::seq::SliceRandom;
 
-// I dont know thy this complaning about debug
-#[derive(Debug)]
-enum TiresTypes {
-    Hard,
+#[derive(PartialEq, PartialOrd, Serialize, Deserialize)]
+enum TireTypes {
+    Soft,
     Medium,
-    Soft
+    Hard,
 }
-#[derive(Debug)]
-struct RaceDriver {
+
+// Although we're only doing F1, in case we added other types of race, they could have different
+// chances for random accidents
+#[derive(Serialize, Deserialize)]
+enum RaceType {
+    FormulaOne,
+}
+
+#[derive(Serialize, Deserialize)]
+enum GridSetup {
+    AsIs,
+    Randomize,
+    LowestSkillFirst,
+    HighestSkillFirst,
+}
+
+#[derive(Serialize, Deserialize)]
+struct Racer {
     name: String,
-    skill: usize, // number with range 0 - 100
-    tire_type: TiresTypes,
-    tire_wear: usize,
-    over_taking: bool, // if == true, the driver can overtake the next driver 
+    skill: u8,
+    tire_type: TireTypes,
+    tire_wear: u8,
+    overtake: bool, // if true, the driver can overtake the next driver 
 }
 
-impl RaceDriver{
-    fn new(name: &str, skill: usize, tire_type: TiresTypes, tire_wear: usize, over_taking: bool) -> Self {
-        Self { name: name.to_string(), skill, tire_type, tire_wear, over_taking}
+impl Racer {
+    fn new(name: &str, skill: u8, tire_type: TireTypes, tire_wear: u8, overtake: bool) -> Self {
+        Self { name: name.to_string(), skill, tire_type, tire_wear, overtake}
     }
 }
 
-fn start_race(laps:usize) {
-   // Read a json file to get race drivers data
-   let mut race = Vec::new(); 
-   race.push(RaceDriver::new("Verstappen", 90, TiresTypes::Hard, 0, true));
-   race.push(RaceDriver::new("Hamilton", 92, TiresTypes::Soft, 0, true));
-   race.push(RaceDriver::new("Leclerc", 88, TiresTypes::Medium, 0, true));
-   // Function to sort the order of drivers. > skill = > grid position
-   race.sort_by(|a, b| b.skill.cmp(&a.skill)); // I didn't understand very well
-   // The over_taking atributte from the leader of the race = false
-   race[0].over_taking = false;
-   println!("{:?}",race);  
-   do_over_taking(race);
-}
-
-fn do_over_taking(race: Vec<RaceDriver>) {
-   
-    for i in 0..race.len() {
+impl PartialEq for Racer {
+    fn eq(&self, other: &Self) -> bool {
+        self.skill == other.skill
     }
 }
 
+impl Eq for Racer {}
 
-fn pit_stop(race: Vec<RaceDriver>) {
-    for i in 0..race(len) {
-        // Calculo probabilistico de ser feito um pit-stop
-        
+impl PartialOrd for Racer {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        self.skill.partial_cmp(&other.skill)
     }
-    
+}
+
+impl Ord for Racer {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.skill.cmp(&other.skill)
+    }
+}
+
+#[derive(Serialize, Deserialize)]
+struct Race {
+    track_name: String,
+    race_type: RaceType,
+    number_of_laps: u8,
+    positions: Vec<Racer>,
+    grid_setup: GridSetup,
+}
+
+impl Race {
+    fn new(race_file: &str) -> Race {
+        let data = fs::read_to_string(race_file).expect("Failed to load file");
+        let mut rng = rand::thread_rng();
+        let mut race: Race = serde_json::from_str(&data).expect("Failed to read JSON data");
+
+        let ordered_race = match race.grid_setup {
+            GridSetup::AsIs => race,
+            GridSetup::Randomize => { race.positions.shuffle(&mut rng); race },
+            GridSetup::LowestSkillFirst => { race.positions.sort(); race.positions.reverse(); race },
+            GridSetup::HighestSkillFirst => { race.positions.sort(); race } ,
+        };
+        ordered_race
+    }
 }
 
 fn main() {
-    start_race(20)
+    println!("Hello world!");
 }
-
-
-// ----------- Rafael
-
-
-// fn main() {
-//     let mut posição = Vec::new();
-//     posição.push(Corredor::novo("Maltar", 5.0));
-//     posição.push(Corredor::novo("Kinder", 10.0));
-//     posição.push(Corredor::novo("Macário", 8.0));
-//     println!("Posição inicial: {:?}", posição);
-//     troca_posição(&mut posição, 0, 2);
-//     println!("Posição inicial: {:?}", posição);
-// }
-
-// #[derive(Clone, Debug)]
-// struct Corredor {
-//     nome: String,
-//     skill: f32,
-// }
-
-// impl Corredor {
-//     fn novo(nome: &str, skill: f32) -> Self {
-//         Self { nome: nome.to_string(), skill }
-//     }
-// }
-
-
-
-
-// fn troca_posição<T: Clone>(vetor: &mut Vec<T>, x: usize, y: usize) {
-//     let aux: T;
-//     aux = vetor[x].clone();
-//     vetor[x] = vetor[y].clone();
-//     vetor[y] = aux;
-// }
