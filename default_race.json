@@ -1,0 +1,22 @@
+{
+	"track_name": "Imola",
+	"race_type": "FormulaOne",
+	"number_of_laps": 55,
+	"positions": [
+		{
+			"name": "Gabriel Bezerra",
+			"skill": 10,
+			"tire_type": "Soft",
+			"tire_wear": 0,
+			"overtake": false
+		},
+		{
+			"name": "Max Felipe",
+			"skill": 9,
+			"tire_type": "Hard",
+			"tire_wear": 0,
+			"overtake": false
+		}
+	],
+	"grid_setup": "HighestSkillFirst"
+}

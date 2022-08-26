@@ -12,7 +12,7 @@ use std::cmp::{Ordering};
 use serde::{Serialize, Deserialize};
 use rand::seq::SliceRandom;
 
-#[derive(PartialEq, PartialOrd, Serialize, Deserialize)]
+#[derive(PartialEq, PartialOrd, Serialize, Deserialize, Debug)]
 enum TireTypes {
     Soft,
     Medium,
@@ -21,12 +21,12 @@ enum TireTypes {
 
 // Although we're only doing F1, in case we added other types of race, they could have different
 // chances for random accidents
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 enum RaceType {
     FormulaOne,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 enum GridSetup {
     AsIs,
     Randomize,
@@ -34,7 +34,7 @@ enum GridSetup {
     HighestSkillFirst,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 struct Racer {
     name: String,
     skill: u8,
@@ -69,7 +69,7 @@ impl Ord for Racer {
     }
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 struct Race {
     track_name: String,
     race_type: RaceType,
@@ -87,13 +87,15 @@ impl Race {
         let ordered_race = match race.grid_setup {
             GridSetup::AsIs => race,
             GridSetup::Randomize => { race.positions.shuffle(&mut rng); race },
-            GridSetup::LowestSkillFirst => { race.positions.sort(); race.positions.reverse(); race },
-            GridSetup::HighestSkillFirst => { race.positions.sort(); race } ,
+            GridSetup::LowestSkillFirst => { race.positions.sort(); race },
+            GridSetup::HighestSkillFirst => { race.positions.sort(); race.positions.reverse(); race } ,
         };
         ordered_race
     }
 }
 
 fn main() {
-    println!("Hello world!");
+    let race = Race::new("default_race.json");
+    println!("{:?}", race);
+    println!("{}", race.positions[0].skill < race.positions[1].skill);
 }
