@@ -8,7 +8,8 @@
 // 8 - Possível enum
 
 use std::fs;
-use std::cmp::{Ordering};
+use std::cell::RefCell;
+use std::cmp::Ordering;
 use serde::{Serialize, Deserialize};
 use rand::seq::SliceRandom;
 use rand::Rng;
@@ -55,6 +56,19 @@ impl Racer {
         let result: u8 = rng.gen();
         result <= 127 
     }
+
+    fn degrade_tire(&mut self) {
+        match self.tire_type {
+            TireTypes::Hard => self.tire_wear += 3,
+            TireTypes::Medium => self.tire_wear += 5,
+            TireTypes::Soft => self.tire_wear += 7,
+        }
+    }
+
+    fn switch_tire(&mut self, new_tire: TireTypes) {
+        self.tire_type = new_tire;
+        self.tire_wear = 0;
+    }
 }
 
 impl PartialEq for Racer {
@@ -92,25 +106,35 @@ impl Race {
         let mut rng = rand::thread_rng();
         let mut race: Race = serde_json::from_str(&data).expect("Failed to read JSON data");
 
-        let ordered_race = match race.grid_setup {
+        let mut race = match race.grid_setup {
             GridSetup::AsIs => race,
             GridSetup::Randomize => { race.positions.shuffle(&mut rng); race },
             GridSetup::LowestSkillFirst => { race.positions.sort(); race },
             GridSetup::HighestSkillFirst => { race.positions.sort(); race.positions.reverse(); race } ,
         };
-        ordered_race
+
+        // for (index, racer) in race.positions.iter().enumerate() {
+        //     if racer.overtake && index == 0 { race.positions[index].overtake = false; }
+        //     else if !racer.overtake && index != 0 { race.positions[index].overtake = true; }
+        // }
+        race
     }
 
     fn next_lap(&mut self) {
         self.number_of_laps -= 1;
+        for (index, racer) in self.positions.iter().rev().enumerate() {
+            // println!("{:?} _ {:?}", self.positions.len() - index, racer);
+            // println!("{:?} _ {:?}", index, racer);
+            if racer.overtake {
+                if racer.overtake(&self.positions[index]) {
+                    println!("Overtaking!");
+                }
+            }
+        }
     }
 }
 
 fn main() {
     let mut race = Race::new("default_race.json");
-    println!("{:?}", race.number_of_laps);
-    println!("{:?}", race.positions[1].overtake(&race.positions[0]));
     race.next_lap();
-    println!("{:?}", race.number_of_laps);
-    println!("{:?}", race.positions[1].overtake(&race.positions[0]));
 }

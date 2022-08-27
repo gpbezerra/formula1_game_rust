@@ -8,15 +8,43 @@
 			"skill": 10,
 			"tire_type": "Soft",
 			"tire_wear": 0,
-			"overtake": false
+			"overtake": false 
 		},
 		{
-			"name": "Max Felipe",
+			"name": "Daniel Sant'Anna",
 			"skill": 9,
+			"tire_type": "Medium",
+			"tire_wear": 0,
+			"overtake": true
+		},
+		{
+			"name": "Letícia Oliveira",
+			"skill": 8,
 			"tire_type": "Hard",
 			"tire_wear": 0,
-			"overtake": false
+			"overtake": true
+		},
+		{
+			"name": "Luan Gadioli",
+			"skill": 7,
+			"tire_type": "Soft",
+			"tire_wear": 0,
+			"overtake": true
+		},
+		{
+			"name": "Isabelle Rizzo",
+			"skill": 6,
+			"tire_type": "Medium",
+			"tire_wear": 0,
+			"overtake": true
+		},
+		{
+			"name": "Thalles Rodrigues",
+			"skill": 5,
+			"tire_type": "Hard",
+			"tire_wear": 0,
+			"overtake": true
 		}
 	],
-	"grid_setup": "HighestSkillFirst"
+	"grid_setup": "AsIs"
 }
