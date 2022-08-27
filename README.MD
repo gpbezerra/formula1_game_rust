@@ -118,3 +118,8 @@ Estrutura piloto:
 - Melhor maneira de se calcular a probabilidade de ultrapassagem;
 - Devo colocar probababilidade de ultrapassagem como atributo de um piloto? ou só deixar como um valor dentro da função;
 - Números desgaste do pneu e habilidade serem de 0 a 10 e de 0 a 100.
+
+## Ideias
+
+- Randomizador de corredores
+- Implementar um Display que permita que cada volta seja legível

@@ -8,13 +8,13 @@
 // 8 - Possível enum
 
 use std::fs;
-use std::cell::RefCell;
+// use std::cell::RefCell;
 use std::cmp::Ordering;
 use serde::{Serialize, Deserialize};
 use rand::seq::SliceRandom;
 use rand::Rng;
 
-#[derive(PartialEq, PartialOrd, Serialize, Deserialize, Debug)]
+#[derive(PartialEq, PartialOrd, Serialize, Deserialize, Clone, Debug)]
 enum TireTypes {
     Soft,
     Medium,
@@ -36,7 +36,7 @@ enum GridSetup {
     HighestSkillFirst,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 struct Racer {
     name: String,
     skill: u8,
@@ -106,28 +106,39 @@ impl Race {
         let mut rng = rand::thread_rng();
         let mut race: Race = serde_json::from_str(&data).expect("Failed to read JSON data");
 
-        let mut race = match race.grid_setup {
+        let race = match race.grid_setup {
             GridSetup::AsIs => race,
             GridSetup::Randomize => { race.positions.shuffle(&mut rng); race },
             GridSetup::LowestSkillFirst => { race.positions.sort(); race },
             GridSetup::HighestSkillFirst => { race.positions.sort(); race.positions.reverse(); race } ,
         };
-
-        // for (index, racer) in race.positions.iter().enumerate() {
-        //     if racer.overtake && index == 0 { race.positions[index].overtake = false; }
-        //     else if !racer.overtake && index != 0 { race.positions[index].overtake = true; }
-        // }
         race
+    }
+    
+    // [Thalles]: This one also smells like smart pointers; it's supposed to alter the overtake
+    // attribute in each element inside race.positions according to their position (i.e., the first
+    // racer cannot attempt to overtake, while everybody else can at first).
+    // fn check_overtake(&mut self) {
+    //     for (index, racer) in self.positions.iter().enumerate() {
+    //         if racer.overtake && index == 0 { self.positions[index].overtake = false; }
+    //         else if !racer.overtake && index != 0 { self.positions[index].overtake = true; }
+    //     }
+    // }
+        
+    // [Thalles]: I feel this is sort of a cop-out, but I currently don't know how to implement
+    // this without simply using clone. Perhaps there's a way to use smart pointers here?
+    fn switch_racers(&mut self, a: usize, b: usize) {
+        let temp = &self.positions[a].clone();
+        self.positions[a] = self.positions[b].clone();
+        self.positions[b] = temp.clone();
     }
 
     fn next_lap(&mut self) {
         self.number_of_laps -= 1;
-        for (index, racer) in self.positions.iter().rev().enumerate() {
-            // println!("{:?} _ {:?}", self.positions.len() - index, racer);
-            // println!("{:?} _ {:?}", index, racer);
+        for (index, racer) in self.positions.clone().iter().rev().enumerate() {
             if racer.overtake {
-                if racer.overtake(&self.positions[index]) {
-                    println!("Overtaking!");
+                if racer.overtake(&self.positions[index]) && index+1 < self.positions.len() {
+                    let _ = &mut self.switch_racers(index, index+1); 
                 }
             }
         }
@@ -136,5 +147,10 @@ impl Race {
 
 fn main() {
     let mut race = Race::new("default_race.json");
-    race.next_lap();
+    println!("The race in {} has begun!", race.track_name);
+    for _ in 0..race.number_of_laps {
+        race.next_lap();
+    //    println!("{:?}", race);
+    }
+    println!("The race has ended! The winner was {}!", race.positions[0].name);
 }
