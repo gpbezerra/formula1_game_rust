@@ -34,19 +34,19 @@ Existem 3 tipos de pneus: Duro, Médio e Macio. Assim como na formula 1, os pneu
 *Legenda: pneu piloto atual -> pneu piloto acima (piloto a ser ultrapassado). O símbolo " -> " representa a chance do primeiro pneu ultrapassar o segundo.*
 
 #### **Pneu Macio**
-- Pneu Macio -> Pneu Médio = 70% de chance de ultrapassagem
 - Pneu Macio -> Pneu Duro = 90% de chance de ultrapassagem
+- Pneu Macio -> Pneu Médio = 70% de chance de ultrapassagem
 - Pneu Macio -> Pneu Macio = 50% de chance de ultrapassagem
 
 #### **Pneu Médio**
-- Pneu Médio -> Pneu Macio = 30% de chance de ultrapassagem
 - Pneu Médio -> Pneu Duro = 60% de chance de ultrapassagem
 - Pneu Médio -> Pneu Médio = 50% de chance de ultrapassagem
+- Pneu Médio -> Pneu Macio = 30% de chance de ultrapassagem
 
 #### **Pneu Duro**
-- Pneu Duro -> Pneu Macio = 10%  de chance de ultrapassagem
-- Pneu Duro -> Pneu Médio = 40% de chance de ultrapassagem
 - Pneu Duro -> Pneu Duro = 50% de chance de ultrapassagem
+- Pneu Duro -> Pneu Médio = 40% de chance de ultrapassagem
+- Pneu Duro -> Pneu Macio = 10%  de chance de ultrapassagem
 
 ###  Cálcular desgaste dos pneus 
 

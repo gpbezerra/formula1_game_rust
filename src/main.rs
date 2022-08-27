@@ -14,7 +14,7 @@ use serde::{Serialize, Deserialize};
 use rand::seq::SliceRandom;
 use rand::Rng;
 
-#[derive(PartialEq, PartialOrd, Serialize, Deserialize, Clone, Debug)]
+#[derive(PartialEq, PartialOrd, Serialize, Deserialize, Clone, Copy, Debug)]
 enum TireTypes {
     Soft,
     Medium,
@@ -41,33 +41,50 @@ struct Racer {
     name: String,
     skill: u8,
     tire_type: TireTypes,
-    tire_wear: u8,
+    tire_condition: f32,
     overtake: bool, // if true, the driver can overtake the next driver 
 }
 
 #[allow(dead_code)]
 impl Racer {
-    fn new(name: &str, skill: u8, tire_type: TireTypes, tire_wear: u8, overtake: bool) -> Self {
-        Self { name: name.to_string(), skill, tire_type, tire_wear, overtake}
+    fn new(name: &str, skill: u8, tire_type: TireTypes, tire_condition: f32, overtake: bool) -> Self {
+        Self { name: name.to_string(), skill, tire_type, tire_condition, overtake}
     }
 
     fn overtake(&self, target: &Self) -> bool {
         let mut rng = rand::thread_rng();
-        let result: u8 = rng.gen();
-        result <= 127 
+        let roll: f32 = rng.gen_range(0.0..1.0);
+
+        let tire_coef = match (self.tire_type, target.tire_type) {
+            (TireTypes::Soft, TireTypes::Soft) => 0.5,
+            (TireTypes::Soft, TireTypes::Medium) => 0.7,
+            (TireTypes::Soft, TireTypes::Hard) => 0.9,
+            (TireTypes::Medium, TireTypes::Soft) => 0.3,
+            (TireTypes::Medium, TireTypes::Medium) => 0.5,
+            (TireTypes::Medium, TireTypes::Hard) => 0.6,
+            (TireTypes::Hard, TireTypes::Soft) => 0.5,
+            (TireTypes::Hard, TireTypes::Medium) => 0.4,
+            (TireTypes::Hard, TireTypes::Hard) => 0.1,
+        };
+
+        println!("sk1: {}, sk2: {}, tcoef: {}, twear: {}", self.skill, target.skill, tire_coef, self.tire_condition);
+        let result = (self.skill / target.skill) as f32 * tire_coef * self.tire_condition; 
+
+        println!("roll: {}, result: {}", roll, result);
+        roll >= result
     }
 
     fn degrade_tire(&mut self) {
         match self.tire_type {
-            TireTypes::Hard => self.tire_wear += 3,
-            TireTypes::Medium => self.tire_wear += 5,
-            TireTypes::Soft => self.tire_wear += 7,
+            TireTypes::Hard => self.tire_condition += 0.03,
+            TireTypes::Medium => self.tire_condition += 0.05,
+            TireTypes::Soft => self.tire_condition += 0.07,
         }
     }
 
     fn switch_tire(&mut self, new_tire: TireTypes) {
         self.tire_type = new_tire;
-        self.tire_wear = 0;
+        self.tire_condition = 1.0;
     }
 }
 
