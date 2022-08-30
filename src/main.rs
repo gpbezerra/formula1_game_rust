@@ -55,7 +55,7 @@ impl Racer {
         let mut rng = rand::thread_rng();
         let roll: f32 = rng.gen_range(0.0..1.0);
 
-        let tire_coef = match (self.tire_type, target.tire_type) {
+        let _tire_coef = match (self.tire_type, target.tire_type) {
             (TireTypes::Soft, TireTypes::Soft) => 0.5,
             (TireTypes::Soft, TireTypes::Medium) => 0.7,
             (TireTypes::Soft, TireTypes::Hard) => 0.9,
@@ -67,18 +67,20 @@ impl Racer {
             (TireTypes::Hard, TireTypes::Hard) => 0.1,
         };
 
-        println!("sk1: {}, sk2: {}, tcoef: {}, twear: {}", self.skill, target.skill, tire_coef, self.tire_condition);
-        let result = (self.skill / target.skill) as f32 * tire_coef * self.tire_condition; 
+        // println!("sk1: {}, sk2: {}, tcoef: {}, twear: {}", self.skill, target.skill, tire_coef, self.tire_condition);
+        // let result = (self.skill / target.skill) as f32 * tire_coef * self.tire_condition; 
+        // let result = (self.tire_condition * (0.5 + tire_coef)) * (self.skill)
 
-        println!("roll: {}, result: {}", roll, result);
-        roll >= result
+        // roll >= result
+        roll <= 0.5
     }
 
     fn degrade_tire(&mut self) {
         match self.tire_type {
-            TireTypes::Hard => self.tire_condition += 0.03,
-            TireTypes::Medium => self.tire_condition += 0.05,
-            TireTypes::Soft => self.tire_condition += 0.07,
+            TireTypes::Hard => self.tire_condition -= 0.03,
+            TireTypes::Medium => self.tire_condition -= 0.05,
+            TireTypes::Soft => self.tire_condition -= 0.07,
+            // TODO: check for nonzero values
         }
     }
 
@@ -135,12 +137,12 @@ impl Race {
     // [Thalles]: This one also smells like smart pointers; it's supposed to alter the overtake
     // attribute in each element inside race.positions according to their position (i.e., the first
     // racer cannot attempt to overtake, while everybody else can at first).
-    // fn check_overtake(&mut self) {
-    //     for (index, racer) in self.positions.iter().enumerate() {
-    //         if racer.overtake && index == 0 { self.positions[index].overtake = false; }
-    //         else if !racer.overtake && index != 0 { self.positions[index].overtake = true; }
-    //     }
-    // }
+    //  fn check_overtake(&mut self) {
+    //      for (index, racer) in self.positions.iter().enumerate() {
+    //          if racer.overtake && index == 0 { self.positions[index].overtake = false; }
+    //          else if !racer.overtake && index != 0 { self.positions[index].overtake = true; }
+    //      }
+    //  }
         
     // [Thalles]: I feel this is sort of a cop-out, but I currently don't know how to implement
     // this without simply using clone. Perhaps there's a way to use smart pointers here?
@@ -167,7 +169,9 @@ fn main() {
     println!("The race in {} has begun!", race.track_name);
     for _ in 0..race.number_of_laps {
         race.next_lap();
-    //    println!("{:?}", race);
+    }
+    for (index, racer) in race.positions.iter().enumerate() {
+        println!("{:?}. {:?}", index, racer.name);
     }
     println!("The race has ended! The winner was {}!", race.positions[0].name);
 }

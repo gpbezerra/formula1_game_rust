@@ -123,3 +123,4 @@ Estrutura piloto:
 
 - Randomizador de corredores
 - Implementar um Display que permita que cada volta seja legível
+- Habilidade dos pilotos afetar chance de acidente (aleatória e em ultrapassagem)
