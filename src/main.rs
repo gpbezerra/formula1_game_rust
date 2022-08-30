@@ -39,7 +39,7 @@ enum GridSetup {
 #[derive(Serialize, Deserialize, Clone, Debug)]
 struct Racer {
     name: String,
-    skill: u8,
+    skill: f32,
     tire_type: TireTypes,
     tire_condition: f32,
     overtake: bool, // if true, the driver can overtake the next driver 
@@ -47,7 +47,7 @@ struct Racer {
 
 #[allow(dead_code)]
 impl Racer {
-    fn new(name: &str, skill: u8, tire_type: TireTypes, tire_condition: f32, overtake: bool) -> Self {
+    fn new(name: &str, skill: f32, tire_type: TireTypes, tire_condition: f32, overtake: bool) -> Self {
         Self { name: name.to_string(), skill, tire_type, tire_condition, overtake}
     }
 
@@ -55,7 +55,7 @@ impl Racer {
         let mut rng = rand::thread_rng();
         let roll: f32 = rng.gen_range(0.0..1.0);
 
-        let _tire_coef = match (self.tire_type, target.tire_type) {
+        let tire_coef = match (self.tire_type, target.tire_type) {
             (TireTypes::Soft, TireTypes::Soft) => 0.5,
             (TireTypes::Soft, TireTypes::Medium) => 0.7,
             (TireTypes::Soft, TireTypes::Hard) => 0.9,
@@ -67,12 +67,10 @@ impl Racer {
             (TireTypes::Hard, TireTypes::Hard) => 0.1,
         };
 
-        // println!("sk1: {}, sk2: {}, tcoef: {}, twear: {}", self.skill, target.skill, tire_coef, self.tire_condition);
-        // let result = (self.skill / target.skill) as f32 * tire_coef * self.tire_condition; 
-        // let result = (self.tire_condition * (0.5 + tire_coef)) * (self.skill)
-
-        // roll >= result
-        roll <= 0.5
+        let limit = self.tire_condition * (0.5 + tire_coef) * (0.2 * self.skill).sqrt() / (5.0 * target.skill - 0.05).sqrt();
+        // DEBUG
+        // println!("limit: {}, roll: {}, result: {}", limit, roll, roll <= limit);
+        roll <= limit
     }
 
     fn degrade_tire(&mut self) {
@@ -106,7 +104,9 @@ impl PartialOrd for Racer {
 
 impl Ord for Racer {
     fn cmp(&self, other: &Self) -> Ordering {
-        self.skill.cmp(&other.skill)
+        let lhs = (self.skill * 10.0) as u8;
+        let rhs = (other.skill * 10.0) as u8;
+        lhs.cmp(&rhs)
     }
 }
 
@@ -171,7 +171,7 @@ fn main() {
         race.next_lap();
     }
     for (index, racer) in race.positions.iter().enumerate() {
-        println!("{:?}. {:?}", index, racer.name);
+        println!("{:?}. {:?}", index+1, racer.name);
     }
     println!("The race has ended! The winner was {}!", race.positions[0].name);
 }

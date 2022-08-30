@@ -119,8 +119,12 @@ Estrutura piloto:
 - Devo colocar probababilidade de ultrapassagem como atributo de um piloto? ou só deixar como um valor dentro da função;
 - Números desgaste do pneu e habilidade serem de 0 a 10 e de 0 a 100.
 
-## Ideias
+## Ideias / Pendências
 
+- Reescrever README
 - Randomizador de corredores
 - Implementar um Display que permita que cada volta seja legível
 - Habilidade dos pilotos afetar chance de acidente (aleatória e em ultrapassagem)
+- Adicionar arquivo de configuração para definir _todos_ os parâmetros (taxa de desgaste dos pneus, coeficientes de chances, etc)
+- Colocar desgaste dos pneus como um valor variável (aleatório dentro de um range de acordo com o tipo de pneu)
+- Definir funções de chance de ultrapassagem, acidente e pit-stop
