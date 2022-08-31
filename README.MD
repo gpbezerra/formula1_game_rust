@@ -104,9 +104,9 @@ Tipos de pneu: Duro, Médio, Macio.
 
 Estrutura piloto:
  - nome: string;
- - habilidade: numero de 0 a 100;
+ - habilidade: numero 0.01 - 1.00;
  - tipo de pneu escolhido: enum tipo de pneu;
- - desgaste do pneu: numero de 0 a 10;
+ - desgaste do pneu: numero de 0.01 - 1.00;
  - fazer ultrapassagem: boolean. Esse valor representa se o piloto pode ou não realizar a ultrapassagem, caso tenha sido ultrapassado esse valor será false.
 
 *Observação: Os range dos valores de "habilidade" e "desgaste do pneu" podem ser alteradas caso eu descubra uma lógica melhor de funcionar matematicamente.*
