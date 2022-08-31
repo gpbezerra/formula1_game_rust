@@ -86,6 +86,19 @@ impl Racer {
         self.tire_type = new_tire;
         self.tire_condition = 1.0;
     }
+
+    fn pit_stop(&mut self) -> bool {
+        let mut rng = rand::thread_rng();
+        let roll: f32 = rng.gen_range(0.0..1.0);
+        
+        if &self.tire_condition >= &0.7 && &self.tire_condition < &0.8 {
+            if roll > 0.001 {
+                println!("change tire");
+                self.switch_tire(self.tire_type);
+            }
+        } 
+        true 
+    }
 }
 
 impl PartialEq for Racer {
@@ -155,6 +168,7 @@ impl Race {
     fn next_lap(&mut self) {
         self.number_of_laps -= 1;
         for (index, racer) in self.positions.clone().iter().rev().enumerate() {
+            racer.pit_stop();
             if racer.overtake {
                 if racer.overtake(&self.positions[index]) && index+1 < self.positions.len() {
                     let _ = &mut self.switch_racers(index, index+1); 
