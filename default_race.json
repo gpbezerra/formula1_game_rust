@@ -46,5 +46,5 @@
 			"overtake": true
 		}
 	],
-	"grid_setup": "AsIs"
+	"grid_setup": "LowestSkillFirst"
 }

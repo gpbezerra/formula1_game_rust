@@ -8,7 +8,7 @@
 // 8 - Possível enum
 
 use std::fs;
-// use std::cell::RefCell;
+use std::cell::RefCell;
 use std::cmp::Ordering;
 use serde::{Serialize, Deserialize};
 use rand::seq::SliceRandom;
@@ -115,7 +115,7 @@ struct Race {
     track_name: String,
     race_type: RaceType,
     number_of_laps: u8,
-    positions: Vec<Racer>,
+    positions: Vec<RefCell<Racer>>,
     grid_setup: GridSetup,
 }
 
@@ -127,23 +127,20 @@ impl Race {
 
         let race = match race.grid_setup {
             GridSetup::AsIs => race,
-            GridSetup::Randomize => { race.positions.shuffle(&mut rng); race },
-            GridSetup::LowestSkillFirst => { race.positions.sort(); race },
-            GridSetup::HighestSkillFirst => { race.positions.sort(); race.positions.reverse(); race } ,
+            GridSetup::Randomize => { race.positions.shuffle(&mut rng); race.check_overtake(); race },
+            GridSetup::LowestSkillFirst => { race.positions.sort(); race.check_overtake(); race },
+            GridSetup::HighestSkillFirst => { race.positions.sort(); race.positions.reverse(); race.check_overtake(); race },
         };
         race
     }
     
-    // [Thalles]: This one also smells like smart pointers; it's supposed to alter the overtake
-    // attribute in each element inside race.positions according to their position (i.e., the first
-    // racer cannot attempt to overtake, while everybody else can at first).
-    //  fn check_overtake(&mut self) {
-    //      for (index, racer) in self.positions.iter().enumerate() {
-    //          if racer.overtake && index == 0 { self.positions[index].overtake = false; }
-    //          else if !racer.overtake && index != 0 { self.positions[index].overtake = true; }
-    //      }
-    //  }
-        
+    fn check_overtake(&mut self) {
+        for (index, racer) in self.positions.iter().enumerate() {
+            if racer.borrow().overtake && index == 0 { self.positions[index].borrow_mut().overtake = false; }
+            else if !racer.borrow().overtake && index != 0 { self.positions[index].borrow_mut().overtake = true; }
+        }
+    }
+
     // [Thalles]: I feel this is sort of a cop-out, but I currently don't know how to implement
     // this without simply using clone. Perhaps there's a way to use smart pointers here?
     fn switch_racers(&mut self, a: usize, b: usize) {
@@ -155,11 +152,12 @@ impl Race {
     fn next_lap(&mut self) {
         self.number_of_laps -= 1;
         for (index, racer) in self.positions.clone().iter().rev().enumerate() {
-            if racer.overtake {
-                if racer.overtake(&self.positions[index]) && index+1 < self.positions.len() {
+            if racer.borrow().overtake {
+                if racer.borrow().overtake(&self.positions[index].borrow()) && index+1 < self.positions.len() {
                     let _ = &mut self.switch_racers(index, index+1); 
                 }
             }
+        self.check_overtake();
         }
     }
 }
@@ -171,7 +169,7 @@ fn main() {
         race.next_lap();
     }
     for (index, racer) in race.positions.iter().enumerate() {
-        println!("{:?}. {:?}", index+1, racer.name);
+         println!("{}. {}", index+1, racer.borrow().name);
     }
-    println!("The race has ended! The winner was {}!", race.positions[0].name);
+    println!("The race has ended! The winner was {}!", race.positions[0].borrow().name);
 }
