@@ -6,42 +6,42 @@
 	"positions": [
 		{
 			"name": "Gabriel Bezerra",
-			"skill": 10.0,
+			"skill": 1.0,
 			"tire_type": "Soft",
 			"tire_condition": 1.0,
 			"overtake": false 
 		},
 		{
 			"name": "Daniel Sant'Anna",
-			"skill": 9.0,
+			"skill": 0.9,
 			"tire_type": "Medium",
 			"tire_condition": 1.0,
 			"overtake": true
 		},
 		{
 			"name": "Letícia Oliveira",
-			"skill": 8.0,
+			"skill": 0.8,
 			"tire_type": "Hard",
 			"tire_condition": 1.0,
 			"overtake": true
 		},
 		{
 			"name": "Luan Gadioli",
-			"skill": 7.0,
+			"skill": 0.7,
 			"tire_type": "Soft",
 			"tire_condition": 1.0,
 			"overtake": true
 		},
 		{
 			"name": "Isabelle Rizzo",
-			"skill": 6.0,
+			"skill": 0.6,
 			"tire_type": "Medium",
 			"tire_condition": 1.0,
 			"overtake": true
 		},
 		{
 			"name": "Thalles Rodrigues",
-			"skill": 5.0,
+			"skill": 0.5,
 			"tire_type": "Hard",
 			"tire_condition": 1.0,
 			"overtake": true
