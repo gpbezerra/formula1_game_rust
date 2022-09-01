@@ -68,29 +68,26 @@ impl Racer {
         };
 
         let limit = self.tire_condition * (0.5 + tire_coef) * (0.2 * self.skill).sqrt() / (5.0 * target.skill - 0.05).sqrt();
-        // DEBUG
-        // println!("limit: {}, roll: {}, result: {}", limit, roll, roll <= limit);
         roll <= limit
     }
 
     #[allow(dead_code)]
     fn degrade_tire(&mut self, track_length: f32) {
         let mut rng = rand::thread_rng();
-        let modifier = track_length / 100.0;
         let degrade_rate = match self.tire_type {
             TireTypes::Hard => {
-                let min = 0.015+modifier;
-                let max = (1.0/((modifier-1.0)*(modifier-1.0)).sqrt()).sqrt();
+                let min = 0.03;
+                let max = min+((min*track_length*track_length)/30.0*track_length);
                 rng.gen_range(min..max)
             }
             TireTypes::Medium => {
-                let min = 0.025+modifier;
-                let max = (1.0/((modifier-1.0)*(modifier-1.0)).sqrt()).sqrt();
+                let min = 0.05;
+                let max = min+((min*track_length*track_length)/30.0*track_length);
                 rng.gen_range(min..max)
             }
             TireTypes::Soft => {
-                let min = 0.035+modifier;
-                let max = (1.0/((modifier-1.0)*(modifier-1.0)).sqrt()).sqrt();
+                let min = 0.07;
+                let max = min+((min*track_length*track_length)/30.0*track_length);
                 rng.gen_range(min..max)
             }
         };
