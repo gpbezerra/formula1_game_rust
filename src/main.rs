@@ -45,8 +45,8 @@ struct Racer {
     overtake: bool, // if true, the driver can overtake the next driver 
 }
 
-#[allow(dead_code)]
 impl Racer {
+    #[allow(dead_code)]
     fn new(name: &str, skill: f32, tire_type: TireTypes, tire_condition: f32, overtake: bool) -> Self {
         Self { name: name.to_string(), skill, tire_type, tire_condition, overtake}
     }
@@ -73,20 +73,39 @@ impl Racer {
         roll <= limit
     }
 
-    fn degrade_tire(&mut self) {
-        match self.tire_type {
-            TireTypes::Hard => self.tire_condition -= 0.03,
-            TireTypes::Medium => self.tire_condition -= 0.05,
-            TireTypes::Soft => self.tire_condition -= 0.07,
-            // TODO: check for nonzero values
-        }
+    #[allow(dead_code)]
+    fn degrade_tire(&mut self, track_length: f32) {
+        let mut rng = rand::thread_rng();
+        let modifier = track_length / 100.0;
+        let degrade_rate = match self.tire_type {
+            TireTypes::Hard => {
+                let min = 0.015+modifier;
+                let max = (1.0/((modifier-1.0)*(modifier-1.0)).sqrt()).sqrt();
+                rng.gen_range(min..max)
+            }
+            TireTypes::Medium => {
+                let min = 0.025+modifier;
+                let max = (1.0/((modifier-1.0)*(modifier-1.0)).sqrt()).sqrt();
+                rng.gen_range(min..max)
+            }
+            TireTypes::Soft => {
+                let min = 0.035+modifier;
+                let max = (1.0/((modifier-1.0)*(modifier-1.0)).sqrt()).sqrt();
+                rng.gen_range(min..max)
+            }
+        };
+
+        self.tire_condition -= degrade_rate;
+        if self.tire_condition < 0.0 { self.tire_condition = 0.0; };
     }
 
+    #[allow(dead_code)]
     fn switch_tire(&mut self, new_tire: TireTypes) {
         self.tire_type = new_tire;
         self.tire_condition = 1.0;
     }
 
+    #[allow(dead_code)]
     fn pit_stop(&mut self) -> bool {
         let mut rng = rand::thread_rng();
         let roll: f32 = rng.gen_range(0.0..1.0);
@@ -126,6 +145,7 @@ impl Ord for Racer {
 #[derive(Serialize, Deserialize, Debug)]
 struct Race {
     track_name: String,
+    track_length: f32, // affects tire degradation per lap;
     race_type: RaceType,
     number_of_laps: u8,
     positions: Vec<RefCell<Racer>>,
@@ -165,6 +185,7 @@ impl Race {
     fn next_lap(&mut self) {
         self.number_of_laps -= 1;
         for (index, racer) in self.positions.clone().iter().rev().enumerate() {
+            racer.borrow_mut().degrade_tire(self.track_length);
             if racer.borrow().overtake {
                 if racer.borrow().overtake(&self.positions[index].borrow()) && index+1 < self.positions.len() {
                     let _ = &mut self.switch_racers(index, index+1); 

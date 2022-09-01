@@ -1,7 +1,8 @@
 {
 	"track_name": "Imola",
+	"track_length": 4.9, 
 	"race_type": "FormulaOne",
-	"number_of_laps": 2,
+	"number_of_laps": 55,
 	"positions": [
 		{
 			"name": "Gabriel Bezerra",
