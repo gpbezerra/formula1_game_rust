@@ -47,5 +47,7 @@
 			"overtake": true
 		}
 	],
-	"grid_setup": "LowestSkillFirst"
+	"grid_setup": "LowestSkillFirst",
+    "safety_car": false,
+    "pit_stop_threshold": 0.5
 }

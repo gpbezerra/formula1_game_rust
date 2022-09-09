@@ -1,11 +1,12 @@
-// 1 - Exemplos de código que dá problema com transferência
-// 2 - Exemplos de código que dá problema com empréstimo borrow
-// 3 - Implementar uma trait com função. Exemplo: display
-// 4 - Criar uma trait (e Implementar)
-// 5 - Usar as enum Option<T> e Result<T;E>
-// 6 - Criar uma enum (valorada)
-// 7 - Implementar struct com encapsulamento 
-// 8 - Possível enum
+// [x] - Exemplos de código que dá problema com transferência
+// [x] - Exemplos de código que dá problema com empréstimo borrow (tecnicamente se não
+// utilizássemos RefCell teria um ótimo exemplo disso
+// [x] - Implementar uma trait com função. Exemplo: display
+// [ ] - Criar uma trait (e Implementar)
+// [ ] - Usar as enum Option<T> e Result<T;E>
+// [0] - Criar uma enum (valorada)
+// [x] - Implementar struct com encapsulamento 
+// [x] - Possível enum
 
 mod race;
 mod racer;

@@ -7,12 +7,12 @@ use crate::racer::Racer;
 
 // Although we're only doing F1, in case we added other types of race, they could have different
 // chances for random accidents
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize)]
 enum RaceType {
     FormulaOne,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize)]
 enum GridSetup {
     AsIs,
     Randomize,
@@ -20,7 +20,7 @@ enum GridSetup {
     HighestSkillFirst,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize)]
 pub struct Race {
     pub track_name: String,
     track_length: f32, // affects tire degradation per lap;
@@ -29,6 +29,7 @@ pub struct Race {
     pub positions: Vec<RefCell<Racer>>,
     grid_setup: GridSetup,
     pub safety_car: bool,
+    pit_stop_threshold: f32, // tire_degradation value at which pit stop checks begin
 }
 
 impl Race {
@@ -59,6 +60,8 @@ impl Race {
         let temp = &self.positions[a].clone();
         self.positions[a] = self.positions[b].clone();
         self.positions[b] = temp.clone();
+        self.positions[a].borrow_mut().overtake = false;
+        self.positions[b].borrow_mut().overtake = false;
     }
 
     pub fn next_lap(&mut self) {
@@ -68,7 +71,7 @@ impl Race {
             racer.borrow_mut().degrade_tire(self.track_length);
 
             // Check if the racer will make a pit stop
-            if racer.borrow().tire_condition <= 0.5 { 
+            if racer.borrow().tire_condition <= self.pit_stop_threshold { 
                 if racer.borrow_mut().pit_stop(racer.borrow().tire_type) { &mut self.switch_racers(index, index-3); }
             }
 
