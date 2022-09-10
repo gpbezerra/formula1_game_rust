@@ -61,7 +61,7 @@ impl Racer {
         let mut rng = rand::thread_rng();
         let roll: f32 = rng.gen_range(0.0..1.0);
 
-        if roll <= (1.0 - self.tire_condition.sqrt()) {
+        if roll <= (1.0 - 1.5 * self.tire_condition * self.tire_condition) {
             self.tire_type = new_tire;
             self.tire_condition = 1.0;
             true

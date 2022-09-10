@@ -1,5 +1,5 @@
 # Simulador de corrida
-Programa para simular uma corrida de formula 1.
+Programa para simular uma corrida de Fórmula 1.
 
 ## Corrida
 
@@ -49,10 +49,7 @@ Os pilotos, ao fazer um pit-stop, perdem 3 posições na corrida, mas tem a poss
 
 #### **Chance do pit-stop ocorrer**
 
-- Valor desgaste do pneu = 7 -> 20% de chance de ocorrer um pit-stop
-- Valor desgaste do pneu = 8 -> 40% de chance de ocorrer um pit-stop
-- Valor desgaste do pneu = 9 -> 70% de chance de ocorrer um pit-stop
-- Valor desgaste do pneu = 10 -> 100% de chance de ocorrer um pit-stop
+A chance de um piloto decidir fazer um pit-stop é definida de acordo com a condição dos pneus, tendendo a ser mais alta conforme a condição fica muito baixa. A chance é zero até que a condição dos pneus alcance o parâmentro `pit_stop_threshold`, definido pela configuração da corrida.  
 
 <hr>
 
