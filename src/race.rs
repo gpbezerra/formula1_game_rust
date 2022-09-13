@@ -1,6 +1,4 @@
 use std::fs;
-use std::cell::RefCell;
-use std::cmp::Ordering;
 use rand::seq::SliceRandom;
 use serde::{Serialize, Deserialize};
 
@@ -27,7 +25,7 @@ pub struct Race {
     track_length: f32, // affects tire degradation per lap;
     race_type: RaceType,
     pub number_of_laps: u8,
-    pub positions: RefCell<Vec<RefCell<Racer>>>,
+    pub positions: Vec<Racer>,
     grid_setup: GridSetup,
     pub safety_car: bool,
     pit_stop_threshold: f32, // tire_degradation value at which pit stop checks begin
@@ -49,47 +47,42 @@ impl Race {
     }
     
     fn check_overtake_flag(&mut self, _safety_car: bool) {
-        for (index, racer) in self.positions.iter().enumerate() {
-            if racer.borrow().overtake && index == 0 { self.positions[index].borrow_mut().overtake = false; }
-            else if !racer.borrow().overtake && index != 0 { self.positions[index].borrow_mut().overtake = true; }
+        for index in 0..self.positions.len() {
+            if index == 0 { self.positions[index].overtake = false; }
+            else if !self.positions[index].overtake { self.positions[index].overtake = true; }
         }
     }
 
-    // [Thalles]: I feel this is sort of a cop-out, but I currently don't know how to implement
-    // this without simply using clone. Perhaps there's a way to use smart pointers here?
     fn switch_racers(&mut self, a: usize, b: usize) {
-        let temp = &self.positions[a].clone();
-        self.positions[a] = self.positions[b].clone();
-        self.positions[b] = temp.clone();
-        self.positions[a].borrow_mut().overtake = false;
-        self.positions[b].borrow_mut().overtake = false;
+        self.positions.swap(a, b);
+        self.positions[a].overtake = false;
+        self.positions[b].overtake = false;
     }
 
     pub fn next_lap(&mut self) {
-        for (index, racer) in self.positions.borrow_mut().iter().rev().enumerate() {
+        for index in (0..self.positions.len()).rev() {
 
             // Degrade tire condition
-            racer.borrow_mut().degrade_tire(self.track_length);
+            self.positions[index].degrade_tire(self.track_length);
 
             // Check if the racer will make a pit stop
-            if racer.borrow().tire_condition <= self.pit_stop_threshold { 
-                if racer.borrow_mut().pit_stop(racer.borrow().tire_type) {
-                    let new_position = match (index-3).cmp(&self.positions.len()) {
-                        Ordering::Less => self.positions.len(),
-                        Ordering::Equal => index-3,
-                        Ordering::Greater => index-3
-                    };
-                    self.switch_racers(index, new_position);
+            if self.positions[index].tire_condition <= self.pit_stop_threshold { 
+                println!("racer: {}, cond: {}, thres: {}", self.positions[index].name, self.positions[index].tire_condition, self.pit_stop_threshold);
+                if self.positions[index].pit_stop(None) {
+                    let (_, subv) = self.positions.split_at_mut(index);
+                    if subv.len() <= 3 {
+                        subv.rotate_right(0);
+                    }
                 }
             }
         }
 
         if !self.safety_car {
-            for (index, racer) in self.positions.clone().iter().rev().enumerate() {
+            for index in (0..self.positions.len()).rev() {
                 // Check for overtaking the next racer
-                if racer.borrow().overtake {
-                    if racer.borrow().overtake(&self.positions[index].borrow()) {
-                        let _ = &mut self.switch_racers(index, index+1); 
+                if self.positions[index].overtake {
+                    if self.positions[index].overtake(&self.positions[index-1]) {
+                        let _ = &mut self.switch_racers(index, index-1); 
                     }
                 }
             }

@@ -57,12 +57,12 @@ impl Racer {
         if self.tire_condition < 0.0 { self.tire_condition = 0.0; };
     }
 
-    pub fn pit_stop(&mut self, new_tire: TireTypes) -> bool {
+    pub fn pit_stop(&mut self, new_tire: Option<TireTypes>) -> bool {
         let mut rng = rand::thread_rng();
         let roll: f32 = rng.gen_range(0.0..1.0);
 
         if roll <= (1.0 - 1.5 * self.tire_condition * self.tire_condition) {
-            self.tire_type = new_tire;
+            if !new_tire.is_none() { self.tire_type = new_tire.unwrap(); } 
             self.tire_condition = 1.0;
             true
         }

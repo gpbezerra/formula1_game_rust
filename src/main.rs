@@ -22,9 +22,9 @@ fn main() {
         race.next_lap();
     }
 
-    for (index, racer) in race.positions.iter().enumerate() {
-         println!("{}. {}", index+1, racer.borrow().name);
+    for index in 0..race.positions.len() {
+         println!("{}. {}", index+1, race.positions[index].name);
     }
 
-    println!("The race has ended! The winner was {}!", race.positions[0].borrow().name);
+    println!("The race has ended! The winner was {}!", race.positions[0].name);
 }
