@@ -15,6 +15,48 @@
 			"overtake": false 
 		},
 		{
+			"name": "Gustavo Kazniakowski",
+			"skill": 1.0,
+			"tire_type": "Hard",
+			"tire_condition": 1.0,
+			"overtake": true
+		},
+		{
+			"name": "Guilherme Thomé",
+			"skill": 0.9,
+			"tire_type": "Medium",
+			"tire_condition": 1.0,
+			"overtake": true
+		},
+		{
+			"name": "Jeanne Umbelino",
+			"skill": 0.8,
+			"tire_type": "Hard",
+			"tire_condition": 1.0,
+			"overtake": true
+		},
+		{
+			"name": "Max Cravo",
+			"skill": 0.7,
+			"tire_type": "Medium",
+			"tire_condition": 1.0,
+			"overtake": true
+		},
+		{
+			"name": "Caroline Oliveira",
+			"skill": 0.6,
+			"tire_type": "Hard",
+			"tire_condition": 1.0,
+			"overtake": true
+		},
+		{
+			"name": "Ana Clara",
+			"skill": 0.7,
+			"tire_type": "Soft",
+			"tire_condition": 1.0,
+			"overtake": true
+		},
+		{
 			"name": "Daniel Sant'Anna",
 			"skill": 0.9,
 			"tire_type": "Medium",
@@ -37,7 +79,7 @@
 		},
 		{
 			"name": "Isabelle Rizzo",
-			"skill": 0.6,
+			"skill": 0.7,
 			"tire_type": "Medium",
 			"tire_condition": 1.0,
 			"overtake": true

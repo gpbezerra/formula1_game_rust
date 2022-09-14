@@ -69,17 +69,15 @@ impl Race {
             if self.positions[index].tire_condition <= self.pit_stop_threshold { 
                 if self.positions[index].pit_stop(None) {
                     self.positions[index].overtake = false;
-                    println!("[PITSTOP] {}", self.positions[index].name);
+                    println!("[PITSTOP] {} has made a pit-stop", self.positions[index].name);
 
                     // If the pilot does go for a pit stop, normally they will lose 3 positions
                     let (_, behind) = self.positions.split_at_mut(index);
- //                   println!("[BEHIND] {:?}", behind);
                     if behind.len() <= 3 {
                         behind.rotate_left(1);
                     }
                     else {
                         let (middle, _) = behind.split_at_mut(4);
-//                        println!("[MIDDLE] {:?}", middle);
                         middle.rotate_left(1);
                     }
                 }
