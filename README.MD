@@ -1,6 +1,15 @@
 # Simulador de corrida
 Programa para simular uma corrida de Fórmula 1.
 
+## Ideias / Pendências
+
+- [ ] Randomizador de corredores
+- [ ] Implementar um Display que permita que cada volta seja legível
+- [ ] Habilidade dos pilotos afetar chance de acidente (aleatória e em ultrapassagem)
+- [ ] Adicionar arquivo de configuração para definir _todos_ os parâmetros (taxa de desgaste dos pneus, coeficientes de chances, etc)
+- [ ] Definir funções de chance de ~~ultrapassagem~~, acidente e pit-stop
+- [ ] Transformar loop de `next_lap()` em uma função de `race`
+
 ## Corrida
 
 Objetivo: Gerar uma corrida com número x de pilotos e um número y de voltas; ao final da corrida, o programa deve retornar a tabela de classificação, dando ênfase ao pódio. Os dados relativos aos pilotos serão consumidos através de um arquivo json. 
@@ -78,10 +87,3 @@ Estrutura piloto:
 
 <hr>
 
-## Ideias / Pendências
-
-- Randomizador de corredores
-- Implementar um Display que permita que cada volta seja legível
-- Habilidade dos pilotos afetar chance de acidente (aleatória e em ultrapassagem)
-- Adicionar arquivo de configuração para definir _todos_ os parâmetros (taxa de desgaste dos pneus, coeficientes de chances, etc)
-- Definir funções de chance de ~~ultrapassagem~~, acidente e pit-stop

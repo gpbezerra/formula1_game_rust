@@ -21,13 +21,13 @@ enum GridSetup {
 
 #[derive(Serialize, Deserialize)]
 pub struct Race {
-    pub track_name: String,
+    track_name: String,
     track_length: f32, // affects tire degradation per lap;
     race_type: RaceType,
-    pub number_of_laps: u8,
-    pub positions: Vec<Racer>,
+    number_of_laps: u8,
+    positions: Vec<Racer>,
     grid_setup: GridSetup,
-    pub safety_car: bool,
+    safety_car: bool,
     pit_stop_threshold: f32, // tire_degradation value at which pit stop checks begin
 }
 
@@ -59,7 +59,7 @@ impl Race {
         self.positions[b].overtake = false;
     }
 
-    pub fn next_lap(&mut self) {
+    fn next_lap(&mut self) {
         for index in (0..self.positions.len()).rev() {
 
             // Degrade tire condition
@@ -67,8 +67,8 @@ impl Race {
 
             // Check if the racer will make a pit stop
             if self.positions[index].tire_condition <= self.pit_stop_threshold { 
-                println!("racer: {}, cond: {}, thres: {}", self.positions[index].name, self.positions[index].tire_condition, self.pit_stop_threshold);
                 if self.positions[index].pit_stop(None) {
+                    // If the pilot does go for a pit stop, normally they will lose 3 positions
                     let (_, subv) = self.positions.split_at_mut(index);
                     if subv.len() <= 3 {
                         subv.rotate_right(0);
@@ -77,8 +77,10 @@ impl Race {
             }
         }
 
+        // If a safety car is on the track, overtaking is prohibited
         if !self.safety_car {
             for index in (0..self.positions.len()).rev() {
+
                 // Check for overtaking the next racer
                 if self.positions[index].overtake {
                     if self.positions[index].overtake(&self.positions[index-1]) {
@@ -93,5 +95,17 @@ impl Race {
 
         // Recheck overtake flags
         self.check_overtake_flag(self.safety_car);
+    }
+
+    pub fn run(&mut self) {
+        println!("The race in {} has begun!", self.track_name);
+        for lap in 0..self.number_of_laps {
+            println!("[LAP {}]", lap+1);
+            for index in 0..self.positions.len() {
+                println!("{}. {}", index+1, self.positions[index].name);
+            }
+            self.next_lap();
+        }
+        println!("The race has ended! The winner was {}!", self.positions[0].name);
     }
 }
