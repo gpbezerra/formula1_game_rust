@@ -25,10 +25,10 @@ pub struct Race {
     track_length: f32, // affects tire degradation per lap;
     race_type: RaceType,
     number_of_laps: u8,
-    positions: Vec<Racer>,
     grid_setup: GridSetup,
     safety_car: bool,
     pit_stop_threshold: f32, // tire_degradation value at which pit stop checks begin
+    positions: Vec<Racer>,
 }
 
 impl Race {
@@ -68,10 +68,19 @@ impl Race {
             // Check if the racer will make a pit stop
             if self.positions[index].tire_condition <= self.pit_stop_threshold { 
                 if self.positions[index].pit_stop(None) {
+                    self.positions[index].overtake = false;
+                    println!("[PITSTOP] {}", self.positions[index].name);
+
                     // If the pilot does go for a pit stop, normally they will lose 3 positions
-                    let (_, subv) = self.positions.split_at_mut(index);
-                    if subv.len() <= 3 {
-                        subv.rotate_right(0);
+                    let (_, behind) = self.positions.split_at_mut(index);
+ //                   println!("[BEHIND] {:?}", behind);
+                    if behind.len() <= 3 {
+                        behind.rotate_left(1);
+                    }
+                    else {
+                        let (middle, _) = behind.split_at_mut(4);
+//                        println!("[MIDDLE] {:?}", middle);
+                        middle.rotate_left(1);
                     }
                 }
             }
@@ -82,8 +91,9 @@ impl Race {
             for index in (0..self.positions.len()).rev() {
 
                 // Check for overtaking the next racer
-                if self.positions[index].overtake {
+                if self.positions[index].overtake && index > 0 {
                     if self.positions[index].overtake(&self.positions[index-1]) {
+                        println!("[OVERTAKE] {} has overtaken {}", self.positions[index].name, self.positions[index-1].name);
                         let _ = &mut self.switch_racers(index, index-1); 
                     }
                 }
@@ -106,6 +116,10 @@ impl Race {
             }
             self.next_lap();
         }
+        println!("[FINAL RESULTS]");
         println!("The race has ended! The winner was {}!", self.positions[0].name);
+        for index in 1..self.positions.len() {
+            println!("{}. {}", index+1, self.positions[index].name);
+        }
     }
 }

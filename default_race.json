@@ -2,7 +2,10 @@
 	"track_name": "Imola",
 	"track_length": 4.9, 
 	"race_type": "FormulaOne",
-	"number_of_laps": 3,
+	"number_of_laps": 30,
+	"grid_setup": "Randomize",
+    "safety_car": false,
+    "pit_stop_threshold": 0.6,
 	"positions": [
 		{
 			"name": "Gabriel Bezerra",
@@ -46,8 +49,5 @@
 			"tire_condition": 1.0,
 			"overtake": true
 		}
-	],
-	"grid_setup": "LowestSkillFirst",
-    "safety_car": false,
-    "pit_stop_threshold": 0.6
+	]
 }

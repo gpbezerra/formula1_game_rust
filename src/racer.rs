@@ -51,7 +51,7 @@ impl Racer {
             TireTypes::Medium => 0.05,
             TireTypes::Soft => 0.07,
         };
-        let max = min+((min*track_length*track_length)/30.0*track_length);
+        let max = min+((min*track_length*track_length)/(30.0*track_length));
 
         self.tire_condition -= rng.gen_range(min..max);
         if self.tire_condition < 0.0 { self.tire_condition = 0.0; };
