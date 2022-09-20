@@ -7,9 +7,9 @@ Programa para simular uma corrida de Fórmula 1.
 - [ ] Implementar um Display que permita que cada volta seja legível
 - [x] Habilidade dos pilotos afetar chance de acidente (aleatória e em ultrapassagem)
 - [ ] Adicionar arquivo de configuração para definir _todos_ os parâmetros (taxa de desgaste dos pneus, coeficientes de chances, etc)
-- [ ] Definir funções de chance de
+- [x] Definir funções de chance de
   - [x] ultrapassagem
-  - [ ] acidentes
+  - [x] acidentes *[Thalles]: por hora, apenas acidentes "solo"*
   - [x] pit-stop
 - [x] Transformar loop de `next_lap()` em uma função de `race`
 - [x] Implementar seleção da troca do pneu ao fazer um pit-stop. *[Thalles]: por hora, deixei aleatório* 
