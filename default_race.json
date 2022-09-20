@@ -4,7 +4,7 @@
 	"race_type": "FormulaOne",
 	"number_of_laps": 30,
 	"grid_setup": "Randomize",
-    "safety_car": false,
+    "safety_car": 0,
     "pit_stop_threshold": 0.6,
 	"positions": [
 		{
@@ -12,84 +12,96 @@
 			"skill": 1.0,
 			"tire_type": "Soft",
 			"tire_condition": 1.0,
-			"overtake": false 
+			"overtake": false,
+			"disabled": false 
 		},
 		{
 			"name": "Gustavo Kazniakowski",
 			"skill": 1.0,
 			"tire_type": "Hard",
 			"tire_condition": 1.0,
-			"overtake": true
+			"overtake": true,
+			"disabled": false
 		},
 		{
 			"name": "Guilherme Thomé",
 			"skill": 0.9,
 			"tire_type": "Medium",
 			"tire_condition": 1.0,
-			"overtake": true
+			"overtake": true,
+			"disabled": false
 		},
 		{
 			"name": "Jeanne Umbelino",
 			"skill": 0.8,
 			"tire_type": "Hard",
 			"tire_condition": 1.0,
-			"overtake": true
+			"overtake": true,
+			"disabled": false
 		},
 		{
 			"name": "Max Cravo",
 			"skill": 0.7,
 			"tire_type": "Medium",
 			"tire_condition": 1.0,
-			"overtake": true
+			"overtake": true,
+			"disabled": false
 		},
 		{
 			"name": "Caroline Oliveira",
 			"skill": 0.6,
 			"tire_type": "Hard",
 			"tire_condition": 1.0,
-			"overtake": true
+			"overtake": true,
+			"disabled": false
 		},
 		{
 			"name": "Ana Clara",
 			"skill": 0.7,
 			"tire_type": "Soft",
 			"tire_condition": 1.0,
-			"overtake": true
+			"overtake": true,
+			"disabled": false
 		},
 		{
 			"name": "Daniel Sant'Anna",
 			"skill": 0.9,
 			"tire_type": "Medium",
 			"tire_condition": 1.0,
-			"overtake": true
+			"overtake": true,
+			"disabled": false
 		},
 		{
 			"name": "Letícia Oliveira",
 			"skill": 0.8,
 			"tire_type": "Hard",
 			"tire_condition": 1.0,
-			"overtake": true
+			"overtake": true,
+			"disabled": false
 		},
 		{
 			"name": "Luan Gadioli",
 			"skill": 0.7,
 			"tire_type": "Soft",
 			"tire_condition": 1.0,
-			"overtake": true
+			"overtake": true,
+			"disabled": false
 		},
 		{
 			"name": "Isabelle Rizzo",
 			"skill": 0.7,
 			"tire_type": "Medium",
 			"tire_condition": 1.0,
-			"overtake": true
+			"overtake": true,
+			"disabled": false
 		},
 		{
 			"name": "Thalles Rodrigues",
 			"skill": 0.5,
 			"tire_type": "Hard",
 			"tire_condition": 1.0,
-			"overtake": true
+			"overtake": true,
+			"disabled": false
 		}
 	]
 }

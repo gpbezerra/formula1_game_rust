@@ -26,7 +26,7 @@ pub struct Race {
     race_type: RaceType,
     number_of_laps: u8,
     grid_setup: GridSetup,
-    safety_car: bool,
+    safety_car: u8,
     pit_stop_threshold: f32, // tire_degradation value at which pit stop checks begin
     positions: Vec<Racer>,
 }
@@ -37,16 +37,16 @@ impl Race {
         let mut rng = rand::thread_rng();
         let mut race: Race = serde_json::from_str(&data).expect("Failed to read JSON data");
 
-        let race = match race.grid_setup {
-            GridSetup::AsIs => race,
-            GridSetup::Randomize => { race.positions.shuffle(&mut rng); race.check_overtake_flag(false); race },
-            GridSetup::LowestSkillFirst => { race.positions.sort(); race.check_overtake_flag(false); race },
-            GridSetup::HighestSkillFirst => { race.positions.sort(); race.positions.reverse(); race.check_overtake_flag(false); race },
+        match race.grid_setup {
+            GridSetup::AsIs => {},
+            GridSetup::Randomize => { race.positions.shuffle(&mut rng); race.check_overtake_flag(); },
+            GridSetup::LowestSkillFirst => { race.positions.sort(); race.check_overtake_flag(); },
+            GridSetup::HighestSkillFirst => { race.positions.sort(); race.positions.reverse(); race.check_overtake_flag(); },
         };
         race
     }
     
-    fn check_overtake_flag(&mut self, _safety_car: bool) {
+    fn check_overtake_flag(&mut self) {
         for index in 0..self.positions.len() {
             if index == 0 { self.positions[index].overtake = false; }
             else if !self.positions[index].overtake { self.positions[index].overtake = true; }
@@ -60,24 +60,38 @@ impl Race {
     }
 
     fn next_lap(&mut self) {
+        let mut accident_has_occurred = false;
+
         for index in (0..self.positions.len()).rev() {
+            // If a safety car is on track, the pitstop penalty is slightly lower
+            let pitstop_penalty = if self.safety_car == 0 { 3 } else { 2 }; 
 
-            // Degrade tire condition
-            self.positions[index].degrade_tire(self.track_length);
+            if !self.positions[index].disabled {
 
-            // Check if the racer will make a pit stop
-            if self.positions[index].tire_condition <= self.pit_stop_threshold { 
-                if self.positions[index].pit_stop(None) {
+                // Degrade tire condition
+                self.positions[index].degrade_tire(self.track_length);
+
+                // Check for random (solo) accidents
+                if self.positions[index].accident() {
+                    println!("[ACCIDENT] {} has suffered an accident and is out of the race!", self.positions[index].name);
+                    self.positions[index].disabled = true;
+                    let (_, behind) = self.positions.split_at_mut(index);
+                    behind.rotate_left(1);
+                    accident_has_occurred = true;
+                }
+
+                // Check if the racer will make a pit stop
+                if self.positions[index].tire_condition <= self.pit_stop_threshold && self.positions[index].pit_stop() { 
                     self.positions[index].overtake = false;
                     println!("[PITSTOP] {} has made a pit-stop", self.positions[index].name);
 
-                    // If the pilot does go for a pit stop, normally they will lose 3 positions
+                    // If the pilot does go for a pit stop, they will lose some positions
                     let (_, behind) = self.positions.split_at_mut(index);
-                    if behind.len() <= 3 {
+                    if behind.len() <= pitstop_penalty {
                         behind.rotate_left(1);
                     }
                     else {
-                        let (middle, _) = behind.split_at_mut(4);
+                        let (middle, _) = behind.split_at_mut(pitstop_penalty+1);
                         middle.rotate_left(1);
                     }
                 }
@@ -85,24 +99,34 @@ impl Race {
         }
 
         // If a safety car is on the track, overtaking is prohibited
-        if !self.safety_car {
+        if self.safety_car == 0 {
             for index in (0..self.positions.len()).rev() {
 
                 // Check for overtaking the next racer
-                if self.positions[index].overtake && index > 0 {
-                    if self.positions[index].overtake(&self.positions[index-1]) {
-                        println!("[OVERTAKE] {} has overtaken {}", self.positions[index].name, self.positions[index-1].name);
-                        let _ = &mut self.switch_racers(index, index-1); 
-                    }
+                if self.positions[index].overtake
+                && index > 0
+                && !self.positions[index].disabled
+                && self.positions[index].overtake(&self.positions[index-1]) {
+                    println!("[OVERTAKE] {} has overtaken {}", self.positions[index].name, self.positions[index-1].name);
+                    let _ = &mut self.switch_racers(index, index-1); 
                 }
             }
         }
+
+        // If there is a safety car on track, decrease counter for every lap completed
+        self.safety_car -= if self.safety_car > 0 { 1 } else { 0 };
 
         // Decrease the lap counter
         self.number_of_laps -= 1;
 
         // Recheck overtake flags
-        self.check_overtake_flag(self.safety_car);
+        self.check_overtake_flag();
+
+        // If an accident happened on this lap, next lap will have a safety car
+        if accident_has_occurred {
+            self.safety_car += 2;
+            println!("[SAFETY CAR] A safety car will be on the track for the next two laps.");
+        }
     }
 
     pub fn run(&mut self) {
