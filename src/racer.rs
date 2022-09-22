@@ -16,6 +16,7 @@ pub struct Racer {
     pub tire_type: TireTypes,
     pub tire_condition: f32,
     pub overtake: bool, // if true, the driver can overtake the next driver 
+                        // se true, o piloto pode ultrapassar o piloto à frente
     pub disabled: bool,
 }
 
